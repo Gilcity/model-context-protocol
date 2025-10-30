@@ -41,7 +41,7 @@ def test_open_yahoo():
             #finding top gainer 
             page.wait_for_selector("table tbody tr", timeout=30000)
             top = search(page)
-            print(f"Sucess! Highest gainer ticker: {top}")
+            print(f"Success! Highest gainer ticker: {top}")
        # assert "" in page.title()
         #browser.close()
         except PWTimeout:
