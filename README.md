@@ -1,5 +1,5 @@
 Part 1: 
-Writing a Python program that opens Yahoo Fiance automatically, searches for the highest grossing stock for today, and returns the ticker and price for the stock. The program will print a clear, final result with the stock, price, and sucess message. 
+Writing a Python program that opens Yahoo Fiance automatically, searches for the highest grossing stock for today, and returns the ticker for the stock. The program prints "Success! Highest gainer ticker: [stock]"
 Includes proper error handlings in order to make sure Playwright will not timeout. 
 
 Part 2:
