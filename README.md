@@ -1,13 +1,6 @@
-Part 1: 
-Writing a Python program that opens Yahoo Fiance automatically, searches for the highest grossing stock for today, and returns the ticker for the stock. The program prints "Success! Highest gainer ticker: [stock]"
-Includes proper error handlings in order to make sure Playwright will not timeout. 
+Part 1: Setting up a Virtual Environment 
 
-Part 2:
-Integrates solution with the Playwright MCP Server and feeds the LLM detailed, structured information about the current state of the webpage--such as accessiblity data and element roles--allowing the AI to choose the next best action. 
-Example: the User provides a goal, "Find me the highest grossing stock of all time"
-Model Context Protocol will then give the LLMk the necessary tools and page context where it will then generate a step-by-step plan using structured commands based on the current page's elements provdied by the MCP. 
-Execution: The program reads the AI's plan and executes the steps using Playwright. 
+First make sure you can create a virtual environment by running: 
+<img width="531" height="27" alt="image" src="https://github.com/user-attachments/assets/89c40562-b30e-431b-94c6-e08dbc18fc5a" />
 
-Please make sure before running you have all the dependecies ready: 
-pip install pytest-playwright
-playwright install
+
