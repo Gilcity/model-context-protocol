@@ -46,5 +46,9 @@ To deactivate your virtual environment simply type
 deactivate
 ```
 
+# Output
 
+Playwright_test.py opens Yahoo Finance, navigates to the highest gainers that day, and returns the Ticker and Price of the Highest Gainer. 
+
+Please feel free to change **headless=True** to **headless=False** if you'd like to watch the process of Playwright. 
 
