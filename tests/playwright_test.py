@@ -16,21 +16,28 @@ def accept_cookies(page):
     return False
 
 #finding the highest ticker and its corresponding price
-def search(page): 
-    page.wait_for_selector("table tbody tr", timeout=30000)
-    first_row = page.query_selector("table tbody tr")
-    if not first_row: 
-        return None
-    symbol_cell = first_row.query_selector("td a")
-    return symbol_cell.inner_text().strip() if symbol_cell else None 
-#report price 
+def search(page):
+    # Wait for the first row to load
+    page.wait_for_selector('table tbody tr', timeout=30000)
+    first_row = page.locator('table tbody tr').first # selecting top gainer
+    ticker = first_row.locator('a[href*="/quote/"]').first.inner_text().strip()
+    price_cells = first_row.locator('td')
+    price = None
+    for i in range(price_cells.count()):
+        text = price_cells.nth(i).inner_text().strip()
+        if text.replace('.', '', 1).isdigit():  
+            price = text
+            break
+
+    return ticker, price
+
 #def report(page): 
 
 
 #opening our browser 
 def test_open_yahoo(): 
     with sync_playwright() as p: 
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page() 
         try: 
             #load and handle cookies
@@ -39,9 +46,8 @@ def test_open_yahoo():
             accept_cookies(page)
 
             #finding top gainer 
-            page.wait_for_selector("table tbody tr", timeout=30000)
-            top = search(page)
-            print(f"Success! Highest gainer ticker: {top}")
+            ticker, price = search(page)
+            print(f"Success!\n Highest gainer ticker: {ticker} \n Price: ${price}")
        # assert "" in page.title()
         #browser.close()
         except PWTimeout:
