@@ -50,5 +50,8 @@ deactivate
 
 Playwright_test.py opens Yahoo Finance, navigates to the highest gainers that day, and returns the Ticker and Price of the Highest Gainer. 
 
+<img width="252" height="53" alt="image" src="https://github.com/user-attachments/assets/337bd778-277e-4cda-b435-d16e61609dde" />
+
+
 Please feel free to change **headless=True** to **headless=False** if you'd like to watch the process of Playwright. 
 
