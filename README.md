@@ -1,3 +1,7 @@
+# Overview 
+This project is split into two parts. The first part uses Python's Playwright to automate web browsing. Playwright will open Yahoo Finance, navigate to Gainers, and return today's top gainer along with its Ticker and Price. 
+The second part of this project integrates the intial program into a Playwright MCP Server using FastMCP. The server acts as a link that feeds the LLM information about the web page, which allows the model to choose the best course of action. 
+
 # Part 1: Setting up a Virtual Environment
 
 First make sure you can create a virtual environment by running: 
@@ -54,4 +58,46 @@ Playwright_test.py opens Yahoo Finance, navigates to the highest gainers that da
 
 
 Please feel free to change **headless=True** to **headless=False** if you'd like to watch the process of Playwright. 
+
+# Using the MCP Server
+
+# Part 1: Setting up the Server 
+
+If you are already in a virtual environment type : 
+```
+source .\.venv\Scripts\Activate
+```
+in your powershell. Then run: 
+```
+pip install "mcp[cli]" playwright
+playwright install
+```
+If you are not already in a virtual environment yo can initialize a uv- managed project with: 
+```
+uv init
+uv add "mcp[cli]" playwright
+uv run playwright install
+```
+# Part 2: Running the Server
+You can run your server using 
+```
+uv run mcp dev server.py
+```
+You will know it is successful when you see 
+
+<img width="199" height="38" alt="image" src="https://github.com/user-attachments/assets/20c149fd-127f-47f8-b6aa-e8678f935965" />  
+
+The server should open up on your browser, where you can navigate to tools and utilize open_url, describe_page, and execute_plan. 
+
+# Output 
+
+Here is an example of running open_url: 
+
+<img width="762" height="487" alt="image" src="https://github.com/user-attachments/assets/120d9bb3-46dc-41ad-b367-68d35b9cd4cc" />
+
+describe_page: 
+
+<img width="732" height="606" alt="image" src="https://github.com/user-attachments/assets/b595ec55-9d34-4b02-85e5-97223192beb6" />
+
+Execute_plan: 
 
