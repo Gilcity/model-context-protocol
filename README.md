@@ -1,6 +1,6 @@
 # Overview 
 This project is split into two parts. The first part uses Python's Playwright to automate web browsing. Playwright will open Yahoo Finance, navigate to Gainers, and return today's top gainer along with its Ticker and Price. 
-The second part of this project integrates the intial program into a Playwright MCP Server using FastMCP. The server acts as a link that feeds the LLM information about the web page, which allows the model to choose the best course of action. 
+The second part of this project integrates the intial program into a Playwright MCP Server using FastMCP to turn it into a web access point. The server acts as a link that feeds the LLM information about the web page, which allows the model to choose the best course of action. 
 
 # Part 1: Setting up a Virtual Environment
 
@@ -97,7 +97,14 @@ Here is an example of running open_url:
 
 describe_page: 
 
+
 <img width="732" height="606" alt="image" src="https://github.com/user-attachments/assets/b595ec55-9d34-4b02-85e5-97223192beb6" />
 
 Execute_plan: 
+
+<img width="719" height="352" alt="image" src="https://github.com/user-attachments/assets/3fa91b6c-a489-4cf7-a4e5-c81a38f9afc5" />
+
+<img width="738" height="432" alt="image" src="https://github.com/user-attachments/assets/8634d68f-3c5b-4f8a-803e-a16ec37e594d" />
+
+**It is important to note that you must use this structure when using execute_plan**
 
