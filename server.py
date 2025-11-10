@@ -1,4 +1,3 @@
-# server.py
 import asyncio
 import json
 import logging
@@ -7,22 +6,16 @@ import time
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from typing import Literal, Optional, List, Dict, Any
+from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 
 from mcp.server.fastmcp import FastMCP, Context
 from pydantic import BaseModel, Field, ValidationError
 
-# IMPORTANT: MCP over stdio must not write normal output to stdout.
-# Log to stderr instead:
+#MCP can't right to normal output , set up logging
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger("mcp-playwright")
 
-# We’ll reuse your *sync* Playwright helpers via asyncio.to_thread
-from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
-
-
-# -----------------------
-# Your existing helpers
-# -----------------------
+#previous helper functions
 def accept_cookies_sync(page) -> bool:
     try:
         time.sleep(2)
@@ -44,7 +37,7 @@ def search_top_gainer_sync(page):
     ticker = first_row.locator('a[href*="/quote/"]').first.inner_text().strip()
     price_cells = first_row.locator("td")
     price = None
-    # find the first numeric-looking td (basic heuristic)
+    # find the first numeric-looking td 
     count = price_cells.count()
     for i in range(count):
         text = (price_cells.nth(i).inner_text() or "").strip()
@@ -54,10 +47,6 @@ def search_top_gainer_sync(page):
             break
     return ticker, price
 
-
-# -----------------------
-# Lifespan-managed state
-# -----------------------
 @dataclass
 class AppState:
     p: any
@@ -93,10 +82,7 @@ async def lifespan(server: FastMCP):
         log.info("Playwright stopped")
 
 
-# -----------------------
-# Planning: action schema
-# -----------------------
-# A small, explicit command language the LLM will emit and we’ll execute.
+#commands the LLM will execute
 
 Op = Literal[
     "goto",            # {op, url}
@@ -120,17 +106,16 @@ class Plan(BaseModel):
     steps: List[Step] = Field(..., min_items=1)
 
 
-# -----------------------
-# MCP server + tools
-# -----------------------
+#MCP server and tools
 mcp = FastMCP("Playwright MCP (Yahoo Finance)", lifespan=lifespan)
 
 
 @mcp.tool()
 async def open_url(ctx: Context, url: str) -> str:
     """Navigate to a URL."""
-    await asyncio.to_thread(ctx.state.page.goto, url, {"wait_until": "domcontentloaded"})
-    return f"navigated:{ctx.state.page.url}"
+    page = ctx.request_context.lifespan_context.page
+    await asyncio.to_thread(page.goto, url, wait_until = "domcontentloaded")
+    return f"navigated:{page.url}"
 
 
 @mcp.tool()
@@ -139,7 +124,7 @@ async def describe_page(ctx: Context) -> Dict[str, Any]:
     Return a structured snapshot of the current page to help an LLM plan.
     Includes common controls and a hint for the Yahoo 'gainers' table.
     """
-    page = ctx.state.page
+    page = ctx.request_context.lifespan_context.page
 
     def _collect():
         # Buttons and links with text for planner
@@ -148,7 +133,6 @@ async def describe_page(ctx: Context) -> Dict[str, Any]:
             try:
                 txt = (b.inner_text() or "").strip()
                 if txt:
-                    # build a stable-ish selector for the planner (heuristic)
                     role_sel = "button"
                     buttons.append({"text": txt, "selector": role_sel})
             except Exception:
@@ -214,7 +198,7 @@ async def execute_plan(ctx: Context, plan_json: str) -> Dict[str, Any]:
     }
     Returns a list of per-step results and, if extraction was requested, the final payload.
     """
-    page = ctx.state.page
+    page = ctx.request_context.lifespan_context.page
 
     # Validate plan
     try:
@@ -230,7 +214,7 @@ async def execute_plan(ctx: Context, plan_json: str) -> Dict[str, Any]:
             if step.op == "goto":
                 if not step.url:
                     raise ValueError("goto requires url")
-                await asyncio.to_thread(page.goto, step.url, {"wait_until": "domcontentloaded"})
+                await asyncio.to_thread(page.goto, step.url, wait_until = "domcontentloaded")
                 results.append({"step": idx, "op": step.op, "ok": True, "url": page.url})
 
             elif step.op == "click":
