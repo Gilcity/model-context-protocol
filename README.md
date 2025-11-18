@@ -1,6 +1,7 @@
 # Overview 
-This project is split into two parts. The first part uses Python's Playwright to automate web browsing. Playwright will open Yahoo Finance, navigate to Gainers, and return today's top gainer along with its Ticker and Price. 
-The second part of this project integrates the intial program into a Playwright MCP Server using FastMCP to turn it into a web access point. The server acts as a link that feeds the LLM information about the web page, which allows the model to choose the best course of action. 
+This project is split into three parts. The first part uses Python's Playwright to automate web browsing. Playwright will open Yahoo Finance, navigate to Gainers, and return today's top gainer along with its Ticker and Price. 
+The second part of this project integrates the intial program into a Playwright MCP Server that acts as a link to feed the LLM structured information about the webpage which allows the AI model to choose the next best action. 
+Finally the third part is making turning the server into a small network-accessible service using FastMCP to create a web access point. 
 
 # Part 1: Setting up a Virtual Environment
 
